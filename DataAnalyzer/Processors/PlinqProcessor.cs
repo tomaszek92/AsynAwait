@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AsynchronousProgramming.DataAnalyzer.Extractors
+namespace AsynchronousProgramming.DataAnalyzer.Processors
 {
-    public class PlinqExtractor : IExtractor
+    public class PlinqProcessor : IProcessor
     {
-        public Dictionary<int, List<int>> Extract(string path)
+        public Dictionary<int, List<int>> Process(string[] lines)
         {
-            var resDic = File.ReadLines(path)
+            var resDic = lines
                 .AsParallel()
                 .Select(line =>
                 {

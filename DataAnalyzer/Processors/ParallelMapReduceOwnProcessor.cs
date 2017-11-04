@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AsynchronousProgramming.DataAnalyzer.Extractors
+namespace AsynchronousProgramming.DataAnalyzer.Processors
 {
-    public class ParallelMapReduceOwnExtractor : IExtractor
+    public class ParallelMapReduceOwnProcessor : IProcessor
     {
-        public Dictionary<int, List<int>> Extract(string path)
+        public Dictionary<int, List<int>> Process(string[] lines)
         {
-            int linesCount = File.ReadLines(path).Count();
-            int linesPerTask = linesCount / Environment.ProcessorCount;
+            int linesPerTask = lines.Length / Environment.ProcessorCount;
             var tasks = new List<Task<Dictionary<int, List<int>>>>();
 
             for (int i = 0; i < Environment.ProcessorCount; i++)
@@ -20,12 +18,12 @@ namespace AsynchronousProgramming.DataAnalyzer.Extractors
                 Task<Dictionary<int, List<int>>> task = Task.Run(() =>
                 {
                     int startLine = localI * linesPerTask;
-                    string[] lines = File.ReadLines(path)
+                    string[] taskLines = lines
                         .Skip(startLine)
                         .Take(linesPerTask)
                         .ToArray();
                     var dic = new Dictionary<int, List<int>>();
-                    foreach (string line in lines)
+                    foreach (string line in taskLines)
                     {
                         var (userId, rate) = ExtractorHelper.GetLineInfo(line);
                         if (dic.TryGetValue(userId, out var rates))

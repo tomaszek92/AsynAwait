@@ -2,8 +2,8 @@
 
 namespace AsynchronousProgramming.DataAnalyzer
 {
-    public interface IExtractor
+    public interface IProcessor
     {
-        Dictionary<int, List<int>> Extract(string path);
+        Dictionary<int, List<int>> Process(string[] lines);
     }
 }

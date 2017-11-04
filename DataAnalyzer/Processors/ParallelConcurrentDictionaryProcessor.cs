@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AsynchronousProgramming.DataAnalyzer.Extractors
+namespace AsynchronousProgramming.DataAnalyzer.Processors
 {
-    public class ParallelConcurrentDictionaryExtractor : IExtractor
+    public class ParallelConcurrentDictionaryProcessor : IProcessor
     {
-        public Dictionary<int, List<int>> Extract(string path)
+        public Dictionary<int, List<int>> Process(string[] lines)
         {
             ConcurrentDictionary<int, List<int>> dic = new ConcurrentDictionary<int, List<int>>();
-            int linesCount = File.ReadLines(path).Count();
-            int linesPerTask = linesCount / Environment.ProcessorCount;
+            int linesPerTask = lines.Length / Environment.ProcessorCount;
             List<Task> tasks = new List<Task>();
 
             for (int i = 0; i < Environment.ProcessorCount; i++)
@@ -23,11 +20,11 @@ namespace AsynchronousProgramming.DataAnalyzer.Extractors
                 Task task = Task.Run(() =>
                 {
                     int startLine = localI * linesPerTask;
-                    string[] lines = File.ReadLines(path)
+                    string[] taskLines = lines
                         .Skip(startLine)
                         .Take(linesPerTask)
                         .ToArray();
-                    foreach (string line in lines)
+                    foreach (string line in taskLines)
                     {
                         var (userId, rate) = ExtractorHelper.GetLineInfo(line);
                         dic.AddOrUpdate(userId, new List<int>(200) {rate}, (user, rates) =>

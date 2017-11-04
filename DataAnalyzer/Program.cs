@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using AsynchronousProgramming.DataAnalyzer.Extractors;
+using AsynchronousProgramming.DataAnalyzer.Processors;
 
 namespace AsynchronousProgramming.DataAnalyzer
 {
@@ -10,44 +11,46 @@ namespace AsynchronousProgramming.DataAnalyzer
     {
         private static string _path = @"C:\Users\Tomasz Tomczykiewicz\Desktop\data.txt";
 
-        static void Main(string[] args)
+        static void Main()
         {
-            //TestAll();
-            Test();
+            TestAll();
+            //Test();
             Console.ReadKey();
         }
 
         static void TestAll()
         {
-            var extractors = new Dictionary<IExtractor, string>
+            var extractors = new Dictionary<IProcessor, string>
             {
-                {new SynchronousExtractor(), "SynchronousExtractor"},
-                {new ParallelLockExtractor(), "ParallelLockExtractor"},
-                {new ParallelConcurrentDictionaryExtractor(), "ParallelConcurrentDictionaryExtractor"},
-                {new ParallelMapReduceOwnExtractor(), "ParallelMapReduceOwnExtractor"},
-                {new ParallelMapReduceExtractor(), "ParallelMapReduceExtractor"},
-                {new PlinqExtractor(), "PlinqExtractor"}
+                {new SynchronousProcessor(), "SynchronousExtractor"},
+                {new ParallelLockProcessor(), "ParallelLockExtractor"},
+                {new ParallelConcurrentDictionaryProcessor(), "ParallelConcurrentDictionaryExtractor"},
+                {new ParallelMapReduceOwnProcessor(), "ParallelMapReduceOwnExtractor"},
+                {new ParallelMapReduceProcessor(), "ParallelMapReduceExtractor"},
+                {new PlinqProcessor(), "PlinqExtractor"}
             };
+            var allLines = File.ReadAllLines(_path);
             foreach (var extractor in extractors)
             {
-                TestSingle(extractor.Key, extractor.Value);
+                TestSingle(extractor.Key, extractor.Value, allLines);
             }
         }
 
-        static void TestSingle(IExtractor extractor, string name)
+        static void TestSingle(IProcessor processor, string name, string[] allLines)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
-            extractor.Extract(_path);
+            processor.Process(allLines);
             stopwatch.Stop();
             Console.WriteLine($"{name}: {stopwatch.Elapsed.TotalSeconds:F}");
         }
 
         static void Test()
         {
-            IExtractor extractor = new ParallelMapReduceOwnExtractor();
+            IProcessor processor = new ParallelMapReduceOwnProcessor();
 
+            var allLines = File.ReadAllLines(_path);
             Stopwatch stopwatch = Stopwatch.StartNew();
-            var dictionary = extractor.Extract(_path);
+            var dictionary = processor.Process(allLines);
             stopwatch.Stop();
 
             Console.WriteLine($"{stopwatch.Elapsed.TotalSeconds:F}");

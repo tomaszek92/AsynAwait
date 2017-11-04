@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AsynchronousProgramming.DataAnalyzer.Extractors
+namespace AsynchronousProgramming.DataAnalyzer.Processors
 {
-    public class ParallelLockExtractor : IExtractor
+    public class ParallelLockProcessor : IProcessor
     {
-        public Dictionary<int, List<int>> Extract(string path)
+        public Dictionary<int, List<int>> Process(string[] lines)
         {
             Dictionary<int, List<int>> dic = new Dictionary<int, List<int>>();
-            int linesCount = File.ReadLines(path).Count();
-            int linesPerTask = linesCount / Environment.ProcessorCount;
+            int linesPerTask = lines.Length / Environment.ProcessorCount;
             object locker = new object();
             List<Task> tasks = new List<Task>();
 
@@ -22,11 +20,11 @@ namespace AsynchronousProgramming.DataAnalyzer.Extractors
                 Task task = Task.Run(() =>
                 {
                     int startLine = localI * linesPerTask;
-                    string[] lines = File.ReadLines(path)
+                    string[] taskLines = lines
                         .Skip(startLine)
                         .Take(linesPerTask)
                         .ToArray();
-                    foreach (string line in lines)
+                    foreach (string line in taskLines)
                     {
                         var (userId, rate) = ExtractorHelper.GetLineInfo(line);
                         lock (locker)

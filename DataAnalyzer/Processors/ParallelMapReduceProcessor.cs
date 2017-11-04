@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
-namespace AsynchronousProgramming.DataAnalyzer.Extractors
+namespace AsynchronousProgramming.DataAnalyzer.Processors
 {
-    public class ParallelMapReduceExtractor : IExtractor
+    public class ParallelMapReduceProcessor : IProcessor
     {
-        public Dictionary<int, List<int>> Extract(string path)
+        public Dictionary<int, List<int>> Process(string[] lines)
         {
             var resDic = new Dictionary<int, List<int>>();
             var locker = new object();
             Parallel.ForEach(
-                File.ReadAllLines(path),
+                lines,
                 () => new Dictionary<int, List<int>>(),
                 (line, state, localDic) =>
                 {
