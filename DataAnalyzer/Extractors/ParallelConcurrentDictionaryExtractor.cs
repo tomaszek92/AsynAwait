@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AsynchronousProgramming.DataAnalyzer.Extractors
 {
-    public class ParallelV2Extractor : IExtractor
+    public class ParallelConcurrentDictionaryExtractor : IExtractor
     {
         public Dictionary<int, List<int>> Extract(string path)
         {

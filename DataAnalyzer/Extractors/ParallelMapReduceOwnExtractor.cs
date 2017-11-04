@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AsynchronousProgramming.DataAnalyzer.Extractors
 {
-    public class ParallelV3Extractor : IExtractor
+    public class ParallelMapReduceOwnExtractor : IExtractor
     {
         public Dictionary<int, List<int>> Extract(string path)
         {

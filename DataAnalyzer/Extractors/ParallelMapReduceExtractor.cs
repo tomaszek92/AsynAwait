@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 
 namespace AsynchronousProgramming.DataAnalyzer.Extractors
 {
-    public class ParallelV4Extractor : IExtractor
+    public class ParallelMapReduceExtractor : IExtractor
     {
         public Dictionary<int, List<int>> Extract(string path)
         {
             var resDic = new Dictionary<int, List<int>>();
+            var locker = new object();
             Parallel.ForEach(
                 File.ReadAllLines(path),
                 () => new Dictionary<int, List<int>>(),
@@ -27,7 +28,7 @@ namespace AsynchronousProgramming.DataAnalyzer.Extractors
                 },
                 localDic =>
                 {
-                    lock (resDic)
+                    lock (locker)
                     {
                         foreach (var pair in localDic)
                         {
@@ -37,8 +38,6 @@ namespace AsynchronousProgramming.DataAnalyzer.Extractors
                             }
                             else
                             {
-                                //resDic[pair.Key] = new List<int>(200);
-                                //resDic[pair.Key].AddRange(pair.Value);
                                 resDic[pair.Key] = pair.Value;
                             }
                         }

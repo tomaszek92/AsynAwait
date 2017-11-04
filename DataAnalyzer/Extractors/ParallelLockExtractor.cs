@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsynchronousProgramming.DataAnalyzer.Extractors
 {
-    public class ParallelV1Extractor : IExtractor
+    public class ParallelLockExtractor : IExtractor
     {
         public Dictionary<int, List<int>> Extract(string path)
         {

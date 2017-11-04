@@ -12,8 +12,8 @@ namespace AsynchronousProgramming.DataAnalyzer
 
         static void Main(string[] args)
         {
-            TestAll();
-            //Test();
+            //TestAll();
+            Test();
             Console.ReadKey();
         }
 
@@ -22,10 +22,11 @@ namespace AsynchronousProgramming.DataAnalyzer
             var extractors = new Dictionary<IExtractor, string>
             {
                 {new SynchronousExtractor(), "SynchronousExtractor"},
-                {new ParallelV1Extractor(), "ParallelV1Extractor"},
-                {new ParallelV2Extractor(), "ParallelV2Extractor"},
-                {new ParallelV3Extractor(), "ParallelV3Extractor"},
-                {new ParallelV4Extractor(), "ParallelV4Extractor"}
+                {new ParallelLockExtractor(), "ParallelLockExtractor"},
+                {new ParallelConcurrentDictionaryExtractor(), "ParallelConcurrentDictionaryExtractor"},
+                {new ParallelMapReduceOwnExtractor(), "ParallelMapReduceOwnExtractor"},
+                {new ParallelMapReduceExtractor(), "ParallelMapReduceExtractor"},
+                {new PlinqExtractor(), "PlinqExtractor"}
             };
             foreach (var extractor in extractors)
             {
@@ -43,7 +44,7 @@ namespace AsynchronousProgramming.DataAnalyzer
 
         static void Test()
         {
-            IExtractor extractor = new ParallelV4Extractor();
+            IExtractor extractor = new ParallelMapReduceOwnExtractor();
 
             Stopwatch stopwatch = Stopwatch.StartNew();
             var dictionary = extractor.Extract(_path);
