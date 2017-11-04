@@ -43,8 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extractors\ConcurrentDictionaryExtractor.cs" />
+    <Compile Include="Extractors\ParallelV1Extractor.cs" />
+    <Compile Include="ExtractorHelper.cs" />
+    <Compile Include="Extractors\ParallelV2Extractor.cs" />
+    <Compile Include="Extractors\ParallelV3Extractor.cs" />
+    <Compile Include="Extractors\ParallelV4Extractor.cs" />
+    <Compile Include="IExtractor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Result.cs" />
+    <Compile Include="Extractors\SynchronousExtractor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
