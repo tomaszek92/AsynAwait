@@ -10,7 +10,7 @@ namespace AsynchronousProgramming.Test
     {
         static void Main(string[] args)
         {
-            //ThreadsVsTasks();
+            ThreadsVsTasks();
             ManyTasks();
             //TaskAwaitAsync().Wait();
 
@@ -70,7 +70,7 @@ namespace AsynchronousProgramming.Test
             {
                 Console.WriteLine($"Starting task {number}");
                 Stopwatch stopwatch = Stopwatch.StartNew();
-                while (stopwatch.ElapsedMilliseconds < 10)
+                while (stopwatch.ElapsedMilliseconds < 1000)
                 {
                 }
                 Console.WriteLine($"Ending task {number}");

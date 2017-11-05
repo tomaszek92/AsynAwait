@@ -7,27 +7,28 @@ using AsynchronousProgramming.DataAnalyzer.Processors;
 
 namespace AsynchronousProgramming.DataAnalyzer
 {
-    static class Program
+    public static class Program
     {
         private static string _path = @"C:\Users\Tomasz Tomczykiewicz\Desktop\data.txt";
 
-        static void Main()
+        private static void Main()
         {
             TestAll();
             //Test();
             Console.ReadKey();
         }
 
-        static void TestAll()
+        private static void TestAll()
         {
             var extractors = new Dictionary<IProcessor, string>
             {
-                {new SynchronousProcessor(), "SynchronousExtractor"},
-                {new ParallelLockProcessor(), "ParallelLockExtractor"},
-                {new ParallelConcurrentDictionaryProcessor(), "ParallelConcurrentDictionaryExtractor"},
-                {new ParallelMapReduceOwnProcessor(), "ParallelMapReduceOwnExtractor"},
-                {new ParallelMapReduceProcessor(), "ParallelMapReduceExtractor"},
-                {new PlinqProcessor(), "PlinqExtractor"}
+                {new LinqProcessor(), "LinqProcessor"},
+                {new SynchronousProcessor(), "SynchronousProcessor"},
+                {new ParallelLockProcessor(), "ParallelLockProcessor"},
+                {new ParallelConcurrentDictionaryProcessor(), "ParallelConcurrentDictionaryProcessor"},
+                {new ParallelMapReduceOwnProcessor(), "ParallelMapReduceOwnProcessor"},
+                {new ParallelMapReduceProcessor(), "ParallelMapReduceProcessor"},
+                {new PlinqProcessor(), "PlinqProcessor"}
             };
             var allLines = File.ReadAllLines(_path);
             foreach (var extractor in extractors)
@@ -36,7 +37,7 @@ namespace AsynchronousProgramming.DataAnalyzer
             }
         }
 
-        static void TestSingle(IProcessor processor, string name, string[] allLines)
+        private static void TestSingle(IProcessor processor, string name, string[] allLines)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
             processor.Process(allLines);
@@ -44,9 +45,9 @@ namespace AsynchronousProgramming.DataAnalyzer
             Console.WriteLine($"{name}: {stopwatch.Elapsed.TotalSeconds:F}");
         }
 
-        static void Test()
+        private static void Test()
         {
-            IProcessor processor = new ParallelMapReduceOwnProcessor();
+            IProcessor processor = new LinqProcessor();
 
             var allLines = File.ReadAllLines(_path);
             Stopwatch stopwatch = Stopwatch.StartNew();

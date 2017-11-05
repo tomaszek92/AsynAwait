@@ -3,12 +3,11 @@ using System.Linq;
 
 namespace AsynchronousProgramming.DataAnalyzer.Processors
 {
-    public class PlinqProcessor : IProcessor
+    public class LinqProcessor : IProcessor
     {
         public Dictionary<int, List<int>> Process(string[] lines)
         {
             return lines
-                .AsParallel()
                 .Select(line =>
                 {
                     var (userId, rate) = ExtractorHelper.GetLineInfo(line);

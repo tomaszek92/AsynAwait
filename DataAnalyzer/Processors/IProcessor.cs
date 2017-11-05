@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AsynchronousProgramming.DataAnalyzer
+namespace AsynchronousProgramming.DataAnalyzer.Processors
 {
     public interface IProcessor
     {
