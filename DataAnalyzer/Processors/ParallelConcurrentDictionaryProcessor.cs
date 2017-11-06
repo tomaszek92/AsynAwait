@@ -11,7 +11,7 @@ namespace AsynchronousProgramming.DataAnalyzer.Processors
         public Dictionary<int, List<int>> Process(string[] lines)
         {
             ConcurrentDictionary<int, List<int>> dic = new ConcurrentDictionary<int, List<int>>();
-            int linesPerTask = lines.Length / Environment.ProcessorCount;
+            var linesSplitted = ExtractorHelper.GetLinesSplitted(lines, Environment.ProcessorCount);
             List<Task> tasks = new List<Task>();
 
             for (int i = 0; i < Environment.ProcessorCount; i++)
@@ -19,12 +19,7 @@ namespace AsynchronousProgramming.DataAnalyzer.Processors
                 int localI = i;
                 Task task = Task.Run(() =>
                 {
-                    int startLine = localI * linesPerTask;
-                    string[] taskLines = lines
-                        .Skip(startLine)
-                        .Take(linesPerTask)
-                        .ToArray();
-                    foreach (string line in taskLines)
+                    foreach (string line in linesSplitted[localI])
                     {
                         var (userId, rate) = ExtractorHelper.GetLineInfo(line);
                         dic.AddOrUpdate(userId, new List<int>(200) {rate}, (user, rates) =>

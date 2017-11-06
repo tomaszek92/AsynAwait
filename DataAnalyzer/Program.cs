@@ -47,7 +47,7 @@ namespace AsynchronousProgramming.DataAnalyzer
 
         private static void Test()
         {
-            IProcessor processor = new LinqProcessor();
+            IProcessor processor = new ParallelMapReduceOwnProcessor();
 
             var allLines = File.ReadAllLines(_path);
             Stopwatch stopwatch = Stopwatch.StartNew();

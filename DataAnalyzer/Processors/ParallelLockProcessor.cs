@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AsynchronousProgramming.DataAnalyzer.Processors
@@ -10,7 +9,7 @@ namespace AsynchronousProgramming.DataAnalyzer.Processors
         public Dictionary<int, List<int>> Process(string[] lines)
         {
             Dictionary<int, List<int>> dic = new Dictionary<int, List<int>>();
-            int linesPerTask = lines.Length / Environment.ProcessorCount;
+            var linesSplitted = ExtractorHelper.GetLinesSplitted(lines, Environment.ProcessorCount);
             object locker = new object();
             List<Task> tasks = new List<Task>();
 
@@ -19,12 +18,7 @@ namespace AsynchronousProgramming.DataAnalyzer.Processors
                 int localI = i;
                 Task task = Task.Run(() =>
                 {
-                    int startLine = localI * linesPerTask;
-                    string[] taskLines = lines
-                        .Skip(startLine)
-                        .Take(linesPerTask)
-                        .ToArray();
-                    foreach (string line in taskLines)
+                    foreach (string line in linesSplitted[localI])
                     {
                         var (userId, rate) = ExtractorHelper.GetLineInfo(line);
                         lock (locker)
